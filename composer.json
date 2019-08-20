@@ -1,0 +1,7 @@
+{
+    "require": {
+        "bluemmb/faker-picsum-photos-provider": "^1.0",
+        "davidbadura/faker-markdown-generator": "^1.0",
+        "fzaninotto/faker": "^1.8"
+    }
+}

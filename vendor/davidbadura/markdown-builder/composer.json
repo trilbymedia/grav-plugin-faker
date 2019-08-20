@@ -1,0 +1,34 @@
+{
+    "name": "davidbadura/markdown-builder",
+    "description": "Markdown Builder",
+    "keywords": [
+        "markdown",
+        "builder",
+        "writer",
+        "render"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "DavidBadura",
+            "email": "d.badura@gmx.de"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "DavidBadura\\MarkdownBuilder\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DavidBadura\\MarkdownBuilder\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable"
+}
