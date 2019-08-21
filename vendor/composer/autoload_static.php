@@ -4,9 +4,13 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit9ee120e6235a60ac2b8e395a479b8cbb
+class ComposerStaticInit19b67f0e83517f6627df84ddf081a0f6
 {
     public static $prefixLengthsPsr4 = array (
+        'G' => 
+        array (
+            'Grav\\Plugin\\Faker\\' => 18,
+        ),
         'F' => 
         array (
             'Faker\\' => 6,
@@ -14,15 +18,14 @@ class ComposerStaticInit9ee120e6235a60ac2b8e395a479b8cbb
         'D' => 
         array (
             'DavidBadura\\MarkdownBuilder\\' => 28,
-            'DavidBadura\\FakerMarkdownGenerator\\' => 35,
-        ),
-        'B' => 
-        array (
-            'Bluemmb\\Faker\\' => 14,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Grav\\Plugin\\Faker\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/classes',
+        ),
         'Faker\\' => 
         array (
             0 => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker',
@@ -31,21 +34,13 @@ class ComposerStaticInit9ee120e6235a60ac2b8e395a479b8cbb
         array (
             0 => __DIR__ . '/..' . '/davidbadura/markdown-builder/src',
         ),
-        'DavidBadura\\FakerMarkdownGenerator\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/davidbadura/faker-markdown-generator/src',
-        ),
-        'Bluemmb\\Faker\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/bluemmb/faker-picsum-photos-provider',
-        ),
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit9ee120e6235a60ac2b8e395a479b8cbb::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit9ee120e6235a60ac2b8e395a479b8cbb::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit19b67f0e83517f6627df84ddf081a0f6::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit19b67f0e83517f6627df84ddf081a0f6::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

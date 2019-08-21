@@ -6,8 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Grav\\Plugin\\Faker\\' => array($baseDir . '/classes'),
     'Faker\\' => array($vendorDir . '/fzaninotto/faker/src/Faker'),
     'DavidBadura\\MarkdownBuilder\\' => array($vendorDir . '/davidbadura/markdown-builder/src'),
-    'DavidBadura\\FakerMarkdownGenerator\\' => array($vendorDir . '/davidbadura/faker-markdown-generator/src'),
-    'Bluemmb\\Faker\\' => array($vendorDir . '/bluemmb/faker-picsum-photos-provider'),
 );

@@ -1,7 +1,11 @@
 {
+    "autoload": {
+        "psr-4": {
+            "Grav\\Plugin\\Faker\\": "classes/"
+        }
+    },
     "require": {
-        "bluemmb/faker-picsum-photos-provider": "^1.0",
-        "davidbadura/faker-markdown-generator": "^1.0",
+        "davidbadura/markdown-builder": "^1.0",
         "fzaninotto/faker": "^1.8"
     }
 }

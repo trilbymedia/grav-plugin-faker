@@ -9,12 +9,15 @@
 
 namespace Grav\Plugin\Console;
 
+use Faker\Factory;
+use Grav\Common\Filesystem\Folder;
 use Grav\Common\Grav;
 use Grav\Common\Inflector;
 use Grav\Console\ConsoleCommand;
+use Grav\Framework\File\File;
+use Grav\Plugin\Faker\FakerMarkdownProvider;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 
 /**
@@ -27,6 +30,7 @@ class GenerateFakeContentCommand extends ConsoleCommand
     protected $options;
     protected $data;
     protected $helper;
+    protected $faker;
 
     /**
      * Configure the command
@@ -37,51 +41,51 @@ class GenerateFakeContentCommand extends ConsoleCommand
             ->setName('generate')
             ->addOption(
                 'nested-levels',
-                'nl',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Number of nested levels - default 1'
             )
             ->addOption(
                 'visible-levels',
-                'vl',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Visible Levels - default is 1'
             )
             ->addOption(
                 'items-per-level',
-                'i',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Number of items per level - default 100'
             )
             ->addOption(
-                'min-words',
-                'min-wrds',
+                'min-parts',
+                null,
                 InputOption::VALUE_OPTIONAL,
-                'Minimum length of content in words - default 100 words'
+                'Minimum number of parts - default 5 parts'
             )
             ->addOption(
-                'max-words',
-                'max-wrds',
+                'max-parts',
+                null,
                 InputOption::VALUE_OPTIONAL,
-                'Maximum length of content in words - default 1000 words'
+                'Maximum number of parts - default 20 parts'
             )
             ->addOption(
                 'min-images',
-                'min-img',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Minimum number of images - default 0'
             )
             ->addOption(
                 'max-images',
-                'max-img',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 'Maximum number of images - default 3'
             )
             ->addOption(
                 'location',
-                'l',
+                null,
                 InputOption::VALUE_OPTIONAL,
-                'Location - default is `user/pages/'
+                'Location - default is `page://'
             )
 
             ->setDescription('Generates fake content')
@@ -107,8 +111,8 @@ class GenerateFakeContentCommand extends ConsoleCommand
             'nested_levels'     => 1,
             'visible_levels'    => 1,
             'items_per_level'   => 100,
-            'min_words'         => 100,
-            'max_words'         => 1000,
+            'min_parts'         => 5,
+            'max_parts'         => 20,
             'min_images'        => 0,
             'max_images'        => 3,
             'location'          => 'page://',
@@ -129,15 +133,72 @@ class GenerateFakeContentCommand extends ConsoleCommand
         if ($location) {
             $io->comment(sprintf('Creating content in %s', $location));
 
+            $this->faker = Factory::create();
+            $this->faker->addProvider(new FakerMarkdownProvider($this->faker));
+
+            $this->createContent($location);
 
         } else {
             $io->error(sprintf('Sorry, location: %s does not exists', $location));
         }
     }
 
-    protected function createContent($dir) {
+    protected function createContent($location, $level = 1) {
 
+
+        for ($i = 0; $i < $this->data['items_per_level']; $i++) {
+
+            $item_number = $i;
+
+
+            $title = Inflector::titleize($this->faker->words(4, true));
+            $slug = Inflector::hyphenize($title);
+            $folder_name = $slug;
+
+            $template = 'default';
+
+            // Handle visibility
+            if ($this->data['visible_levels'] > 0 &&  $level <= $this->data['visible_levels']) {
+                $folder_name = str_pad($i+1, 2, '0', STR_PAD_LEFT) . '.' . $folder_name;
+            }
+
+            $folder = $location . '/' . $folder_name;
+
+            Folder::create($folder);
+
+            $images = [];
+            $image_count = $this->faker->numberBetween($this->data['min_images'], $this->data['max_images']);
+
+            for ($j = 0; $j < $image_count; $j++) {
+                $images[] = $this->createImage($folder);
+            }
+
+            $content = $this->faker->markdown($this->data, $images);
+            $markdown = "---\ntitle: $title\n---\n\n" . $content;
+
+            file_put_contents($folder . '/' . $template . '.md', $markdown);
+
+            // check if children need to be created
+            if ($this->data['nested_levels'] > 0 &&  $level < $this->data['nested_levels']) {
+                $this->createContent($folder, $level + 1);
+            }
+        }
     }
+
+    protected function createImage($path)
+    {
+        $filename = Inflector::hyphenize($this->faker->words(2, true)) . '.jpg';
+        $path = $path . '/' . $filename;
+        $source = __DIR__ . '/../media/sample.jpg';
+
+        if (file_exists($source)) {
+            copy($source, $path);
+            return $filename;
+        }
+
+        return 'filenotfound.jpg';
+    }
+
 
 
     protected function askQuestion($key)

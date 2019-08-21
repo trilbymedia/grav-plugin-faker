@@ -47,12 +47,5 @@ class FakerPlugin extends Plugin
         if ($this->isAdmin()) {
             return;
         }
-
-        // Enable the main event we are interested in
-        $this->enable([
-            'onPageContentRaw' => ['onPageContentRaw', 0]
-        ]);
     }
-
-
 }
