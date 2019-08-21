@@ -55,3 +55,9 @@ Alternatively, you can set **any** or **all** the options via the CLI command it
 $ bin/plugin faker generate --nested-levels=3 --visible-levels=2 --items-per-level=10 --min-parts=5 --max-items=10000 --max-parts=20 --min-images=2 --max-images=5 --location=page://04.faker-pages
 ```
 
+Get help with:
+
+```shell script
+$ bin/plugin faker help
+```
+
