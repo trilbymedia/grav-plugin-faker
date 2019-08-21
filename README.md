@@ -1,8 +1,6 @@
 # Faker Plugin
 
-**This README.md file should be modified to describe the features, installation, configuration, and general usage of the plugin.**
-
-The **Faker** Plugin is an extension for [Grav CMS](http://github.com/getgrav/grav). Create fake content for testing
+The **Faker** Plugin is an extension for [Grav CMS](http://github.com/getgrav/grav). Faker creates **dummy Grav page content** for testing and development purposes.
 
 ## Installation
 
@@ -26,31 +24,34 @@ You should now have all the plugin files under
 	
 > NOTE: This plugin is a modular component for Grav which may require other plugins to operate, please see its [blueprints.yaml-file on GitHub](https://github.com/trilbymedia/grav-plugin-faker/blob/master/blueprints.yaml).
 
-### Admin Plugin
+### Instructions
 
-If you use the Admin Plugin, you can install the plugin directly by browsing the `Plugins`-menu and clicking on the `Add` button.
+This plugin provides a **CLI Command** to create dummy/fake data.  This simplest way to run **Faker** is to simply use:
 
-## Configuration
-
-Before configuring this plugin, you should copy the `user/plugins/faker/faker.yaml` to `user/config/plugins/faker.yaml` and only edit that copy.
-
-Here is the default configuration and an explanation of available options:
-
-```yaml
-enabled: true
+```shell script
+$ bin/plugin faker generate
 ```
 
-Note that if you use the Admin Plugin, a file with your configuration named faker.yaml will be saved in the `user/config/plugins/`-folder once the configuration is saved in the Admin.
+You will be prompted for several options, all of which have defaults.  Just hit `[return]` to accept the defaults, or choose your own values:
 
-## Usage
+```shell script
+Generate Faker Content
+======================
 
-**Describe how to use the plugin.**
+Number of nested_levels [1]:
+Number of visible_levels [1]:
+Number of items_per_level [100]:
+Number of max_items [1000]:
+Number of min_parts [5]:
+Number of max_parts [20]:
+Number of min_images [0]:
+Number of max_images [3]:
+Number of location [page://]:
+```
 
-## Credits
+Alternatively, you can set **any** or **all** the options via the CLI command itself:
 
-**Did you incorporate third-party code? Want to thank somebody?**
-
-## To Do
-
-- [ ] Future plans, if any
+```shell script
+$ bin/plugin faker generate --nested-levels=3 --visible-levels=2 --items-per-level=10 --min-parts=5 --max-items=10000 --max-parts=20 --min-images=2 --max-images=5 --location=page://04.faker-pages
+```
 

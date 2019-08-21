@@ -14,7 +14,6 @@ use Grav\Common\Filesystem\Folder;
 use Grav\Common\Grav;
 use Grav\Common\Inflector;
 use Grav\Console\ConsoleCommand;
-use Grav\Framework\File\File;
 use Grav\Plugin\Faker\FakerMarkdownProvider;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -31,6 +30,7 @@ class GenerateFakeContentCommand extends ConsoleCommand
     protected $data;
     protected $helper;
     protected $faker;
+    protected $total_pages;
 
     /**
      * Configure the command
@@ -56,6 +56,12 @@ class GenerateFakeContentCommand extends ConsoleCommand
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Number of items per level - default 100'
+            )
+            ->addOption(
+                'max-items',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Maximum number of items - default 10000'
             )
             ->addOption(
                 'min-parts',
@@ -111,6 +117,7 @@ class GenerateFakeContentCommand extends ConsoleCommand
             'nested_levels'     => 1,
             'visible_levels'    => 1,
             'items_per_level'   => 100,
+            'max_items'         => 1000,
             'min_parts'         => 5,
             'max_parts'         => 20,
             'min_images'        => 0,
@@ -128,15 +135,18 @@ class GenerateFakeContentCommand extends ConsoleCommand
         }
 
         $location = $grav['locator']->findResource($this->data['location']);
+        $this->total_pages = 0;
 
 
         if ($location) {
-            $io->comment(sprintf('Creating content in %s', $location));
+            $io->warning(sprintf('Creating content in %s', $location));
 
             $this->faker = Factory::create();
             $this->faker->addProvider(new FakerMarkdownProvider($this->faker));
 
             $this->createContent($location);
+
+            $io->success($this->total_pages . ' pages created');
 
         } else {
             $io->error(sprintf('Sorry, location: %s does not exists', $location));
@@ -148,9 +158,11 @@ class GenerateFakeContentCommand extends ConsoleCommand
 
         for ($i = 0; $i < $this->data['items_per_level']; $i++) {
 
+            if ($this->total_pages >= $this->data['max_items']) {
+                break;
+            }
+
             $item_number = $i;
-
-
             $title = Inflector::titleize($this->faker->words(4, true));
             $slug = Inflector::hyphenize($title);
             $folder_name = $slug;
@@ -177,6 +189,9 @@ class GenerateFakeContentCommand extends ConsoleCommand
             $markdown = "---\ntitle: $title\n---\n\n" . $content;
 
             file_put_contents($folder . '/' . $template . '.md', $markdown);
+
+            $this->output->writeln('<white>' . ($this->total_pages + 1) . '</white> ' . $folder . ' <green>✔</green>');
+            $this->total_pages++;
 
             // check if children need to be created
             if ($this->data['nested_levels'] > 0 &&  $level < $this->data['nested_levels']) {
