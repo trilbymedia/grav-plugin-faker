@@ -93,6 +93,12 @@ class GenerateFakeContentCommand extends ConsoleCommand
                 InputOption::VALUE_OPTIONAL,
                 'Location - default is `page://'
             )
+            ->addOption(
+                'template',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Template - default is `default'
+            )
 
             ->setDescription('Generates fake content')
             ->setHelp('The <info>lookup-user</info> finds a user based on some data query.')
@@ -123,6 +129,7 @@ class GenerateFakeContentCommand extends ConsoleCommand
             'min_images'        => 0,
             'max_images'        => 3,
             'location'          => 'page://',
+            'template'          => 'default',
         ];
 
         $this->helper = $this->getHelper('question');
@@ -167,7 +174,7 @@ class GenerateFakeContentCommand extends ConsoleCommand
             $slug = Inflector::hyphenize($title);
             $folder_name = $slug;
 
-            $template = 'default';
+            $template = $this->options['template'];
 
             // Handle visibility
             if ($this->data['visible_levels'] > 0 &&  $level <= $this->data['visible_levels']) {
